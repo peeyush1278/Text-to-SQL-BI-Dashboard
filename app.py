@@ -2,6 +2,11 @@ import streamlit as st
 import plotly.express as px
 from sql_agent import process_query
 import pandas as pd
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 st.set_page_config(page_title="AI Data Analyst", page_icon="📊", layout="wide")
 
@@ -63,7 +68,8 @@ with st.sidebar:
     * 📉 **Charts:** Plotly Express
     """)
     st.divider()
-    groq_api_key = st.text_input("🔑 Groq API Key", type="password", placeholder="gsk_...")
+    default_key = os.getenv("GROQ_API_KEY", "")
+    groq_api_key = st.text_input("🔑 Groq API Key", type="password", value=default_key, placeholder="gsk_...")
     groq_model = st.selectbox("Select LLM Brain", ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "mixtral-8x7b-32768", "gemma2-9b-it"], index=0)
     st.divider()
     st.markdown("**Database Schema Available:**")

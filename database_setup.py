@@ -2,10 +2,12 @@ import sqlite3
 import pandas as pd
 import random
 from datetime import datetime, timedelta
+import os
 
 def create_database():
-    print("🛒 Building highly-realistic mock E-commerce Database...")
-    conn = sqlite3.connect('ecommerce.db')
+    print("Building highly-realistic mock E-commerce Database...")
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ecommerce.db')
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
     # 1. Create Customers Table
@@ -88,7 +90,7 @@ def create_database():
 
     conn.commit()
     conn.close()
-    print("✅ Database 'ecommerce.db' created successfully with 3 tables (Customers, Products, Sales).")
+    print("Database 'ecommerce.db' created successfully with 3 tables (Customers, Products, Sales).")
 
 if __name__ == "__main__":
     create_database()

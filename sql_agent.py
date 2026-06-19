@@ -1,3 +1,4 @@
+import os
 from langchain_community.utilities import SQLDatabase
 from langchain_groq import ChatGroq
 from langchain.chains import create_sql_query_chain
@@ -5,10 +6,13 @@ import pandas as pd
 import sqlite3
 import re
 
+# Get database path relative to this script
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ecommerce.db')
+
 def process_query(question: str, model_name: str, api_key: str) -> dict:
     """Translates a natural language question into SQL, runs it, and returns the data."""
     
-    db = SQLDatabase.from_uri("sqlite:///ecommerce.db")
+    db = SQLDatabase.from_uri(f"sqlite:///{DB_PATH}")
     llm = ChatGroq(model_name=model_name, api_key=api_key, temperature=0.0)
     
     # Create the SQL generating chain
@@ -34,7 +38,7 @@ def process_query(question: str, model_name: str, api_key: str) -> dict:
         sql_query = sql_query.split(";")[0].strip(' \n\r\t"\'') + ";" 
         
         # Step 3: Execute the SQL via Pandas
-        conn = sqlite3.connect('ecommerce.db')
+        conn = sqlite3.connect(DB_PATH)
         df = pd.read_sql_query(sql_query, conn)
         conn.close()
         
